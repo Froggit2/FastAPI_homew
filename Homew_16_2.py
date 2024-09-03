@@ -19,7 +19,6 @@ async def users_list():
 
 @app.post("/user/")
 async def user_add(user: User):
-    # Определяем новый индекс для пользователя
     next_index = str(int(max(users.keys(), key=int)) + 1)
     users[next_index] = f"Имя: {user.username}, возраст: {user.age}, сообщение: {user.message}"
     return {"status": "Пользователь добавлен", "user_id": next_index}
