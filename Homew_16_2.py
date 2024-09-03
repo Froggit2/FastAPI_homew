@@ -1,8 +1,15 @@
 from fastapi import FastAPI
+from pydantic import BaseModel
 
 app = FastAPI()
 
 users = {'1': 'Имя: Example, возраст: 18'}
+
+
+class User(BaseModel):
+    username: str
+    age: int
+    message: str
 
 
 @app.get("/user")
@@ -10,15 +17,12 @@ async def users_list():
     return users
 
 
-
-
-# @app.post("/user/{username}/{age}")
-# async def user_add(username, age, message, user_id):
-#     current_index = str(int(max(users, key=f"Имя: {username}, возраст: {age}")) + 1)
-#     users[current_index] = message
-#     return f"User {user_id} is registered."
-
-
+@app.post("/user/")
+async def user_add(user: User):
+    # Определяем новый индекс для пользователя
+    next_index = str(int(max(users.keys(), key=int)) + 1)
+    users[next_index] = f"Имя: {user.username}, возраст: {user.age}, сообщение: {user.message}"
+    return {"status": "Пользователь добавлен", "user_id": next_index}
 
 
 @app.put("/user/{user_id}/{username}/{age}")
